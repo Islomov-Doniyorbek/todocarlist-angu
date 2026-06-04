@@ -1,45 +1,44 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Reservation } from '../models/reservation';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CarService {
   private reservations: Reservation[] = [];
-
-
+  private http = inject(HttpClient)
+  private apiUrl = 'http://localhost:3000'
   constructor(){
     const savedReserv = localStorage.getItem('reservations')
     this.reservations = savedReserv ? JSON.parse(savedReserv) : []
   }
 
-  getReservations(): Reservation[]{
-    return this.reservations;
+  getReservations(): Observable<Reservation[]>{
+    return this.http.get<Reservation[]>(`${this.apiUrl}/reservation`);
   }
 
-  getReservationById(id:number): Reservation | undefined{
-    return this.reservations.find((reservation)=>reservation.id === id)
+  getReservationById(id:number): Observable<Reservation>{
+    return this.http.get<Reservation>(`${this.apiUrl}/reservation/${id}`)
   }
 
-  addReservation(reservation: Reservation):void {
-    this.reservations.push(reservation)
-    localStorage.setItem('reservations', JSON.stringify(this.reservations))
+  addReservation(reservation: Reservation):Observable<Reservation> {
+    return this.http.post<Reservation>(`${this.apiUrl}/reservation`, reservation)
   }
 
-  deleteReservation(id: number):void {
-    this.reservations = this.reservations.filter((reservation) => reservation.id !== id)
+  deleteReservation(id: number):Observable<Reservation> {
+    return this.http.delete<Reservation>(`${this.apiUrl}/reservation/${id}`)
+    // this.reservations = this.reservations.filter((reservation) => reservation.id !== id)
     
-    localStorage.setItem('reservations', JSON.stringify(this.reservations))
+    // localStorage.setItem('reservations', JSON.stringify(this.reservations))
   }
 
-  updateReservation(id: number, updateReservation:Reservation):void {
-    this.reservations = this.reservations.map((item)=>{
-      if(item.id === id){
-        return updateReservation
-      }
-      return item;
-    })
+  updateReservation(id: number, updateReservation:Reservation):Observable<Reservation> {
+    return this.http.put<Reservation>(
+      `${this.apiUrl}/reservation/${id}`, updateReservation
+    )
     
-    localStorage.setItem('reservations', JSON.stringify(this.reservations))
+    // localStorage.setItem('reservations', JSON.stringify(this.reservations))
   }
 }

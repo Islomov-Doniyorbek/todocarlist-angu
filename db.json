@@ -1,0 +1,23 @@
+{
+  "reservation": [
+    {
+      "checkIn": "2026-10-01",
+      "checkOut": "2026-10-05",
+      "clientName": "Ali Valiyev",
+      "clientEmail": "ali@example.com",
+      "carModel": "Chevrolet Monix",
+      "carNumber": "01123",
+      "id": "1"
+    },
+    {
+      "checkIn": "2026-11-10",
+      "checkOut": "2026-11-14",
+      "clientName": "Sardor Yuldashev",
+      "clientEmail": "sardor@example.com",
+      "carModel": "Chevrolet Matiz",
+      "carNumber": "50987",
+      "id": "6"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

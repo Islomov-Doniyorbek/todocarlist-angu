@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CarService } from '../services/car.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Reservation } from '../models/reservation';
 
 @Component({
   selector: 'app-car-form',
@@ -28,43 +29,61 @@ export class CarForm {
     const reservationId = this.activatedRoute.snapshot.paramMap.get('id')
 
     if(reservationId){
-      const reservation = this.carService.getReservationById(+reservationId)
-      if(reservation){
-        this.reservationForm.patchValue({
-          checkIn: reservation.checkIn,
-          checkOut: reservation.checkOut,
-          clientName: reservation.clientName,
-          clientEmail: reservation.clientEmail,
-          carModel: reservation.carModel,
-          carNumber: reservation.carNumber,
-        })
-      }
-
+      this.loadReservation(+reservationId)
+      
     }
     console.log(this.activatedRoute.snapshot.params);
     
+  }
+
+  loadReservation(reservationId: number):void {
+    this.carService.getReservationById(+reservationId).subscribe({
+        next: (data) => {
+          this.reservationForm.patchValue({
+          ...data
+        })
+        },
+        error: (err)=>{
+          console.log(err);
+          
+        }
+      })
   }
 
   onSubmit(){
     const reservationId = this.activatedRoute.snapshot.paramMap.get('id')
     
     if(reservationId){
-      const reservation = this.carService.getReservationById(+reservationId)
-      if(reservation){
         this.carService.updateReservation(+reservationId, {
           ...this.reservationForm.value, id: +reservationId
+        }).subscribe({
+          next: (data)=>{
+            this.reservationForm.reset()
+            this.router.navigate(['/list'])
+
+          },error: (err)=>{
+            console.log(err);
+            
+          }
         })
-        this.router.navigate(['/list'])
-      }
+      
       
     }else{
         
         const data = {...this.reservationForm.value, id: Date.now()}
-        this.reservationForm.reset();
-        this.carService.addReservation(data)
+        this.carService.addReservation(data).subscribe({
+          next: (data)=>{
+            this.reservationForm.reset();
+            this.router.navigate(['/list'])
+            console.log(data);
+            
+          },
+          error: (err)=>{
+            console.log(err);
+            
+          }
+        })
         
-        this.router.navigate(['/list'])
-        console.log(data);
       }
     
     

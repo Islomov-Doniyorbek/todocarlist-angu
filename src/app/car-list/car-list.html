@@ -21,7 +21,7 @@
         }@else {
             @for (item of reservationList; track item.id) {
               <tr class="border-t hover:bg-slate-50">
-                <td class="px-4 py-3">{{ item.clientName | titlecase}}</td>
+                <td class="px-4 py-3">{{ item.clientName ? (item.clientName | titlecase) : "---"}}</td>
                 <td class="px-4 py-3">{{ item.clientEmail }}</td>
                 <td class="px-4 py-3">{{ item.carModel }}</td>
                 <td class="px-4 py-3">{{ item.carNumber }}</td>
