@@ -1,0 +1,42 @@
+<h3 class="py-3 text-center text-2xl font-semibold">Reservation List</h3>
+<div class="overflow-x-auto">
+  <table class="w-full border border-gray-200 rounded-lg overflow-hidden">
+    <thead class="bg-slate-100">
+      <tr>
+        <th class="px-4 py-3 text-left font-semibold">Client</th>
+        <th class="px-4 py-3 text-left font-semibold">Email</th>
+        <th class="px-4 py-3 text-left font-semibold">Car</th>
+        <th class="px-4 py-3 text-left font-semibold">Car number</th>
+        <th class="px-4 py-3 text-left font-semibold">Check In</th>
+        <th class="px-4 py-3 text-left font-semibold">Check Out</th>
+        <th class="px-4 py-3 text-left font-semibold">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+        @if (reservationList.length == 0) {
+            <tr class="border-t hover:bg-slate-50">
+                <td colspan="7" class="px-4 py-3 bg-red-100 text-center">Empty ^_^</td>
+            </tr>
+        }@else {
+            @for (item of reservationList; track item.id) {
+              <tr class="border-t hover:bg-slate-50">
+                <td class="px-4 py-3">{{ item.clientName | titlecase}}</td>
+                <td class="px-4 py-3">{{ item.clientEmail }}</td>
+                <td class="px-4 py-3">{{ item.carModel }}</td>
+                <td class="px-4 py-3">{{ item.carNumber }}</td>
+                <td class="px-4 py-3">{{ item.checkIn | date:'dd.MM.yyyy'}}</td>
+                <td class="px-4 py-3">{{ item.checkOut | date:'dd.MM.yyyy'}}</td>
+                <td class="px-4 py-3">
+                  <button class="py-2 px-4 border rounded-md bg-orange-200
+                   border-orange-500 text-orange-600 mr-3" [routerLink]="['/edit', item.id]">Edit</button>
+                  <button class="py-2 px-4 border rounded-md bg-red-200
+                   border-red-500 text-red-600" (click)="deleteReservation(item.id)">Delete</button>
+                </td>
+              </tr>
+            }
+
+        }
+    </tbody>
+  </table>
+</div>
